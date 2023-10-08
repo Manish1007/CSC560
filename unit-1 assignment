@@ -1,0 +1,86 @@
+var express = require ('express');
+var app = express();
+var fs = require("fs");
+
+// Demonstration Data
+{
+	"user1":{
+		"name":"karthik",
+		"city":"wisconsin",
+		"id":1200,
+		"age":23
+		},
+
+	"user2":{
+		"name":"krishna",
+		"city":"chicago",
+		"id":1201,
+		"age":24
+   		},
+
+	"user3":{
+		"name":"virat",
+		"city":"newyork",
+		"id":1202,
+		"age":22
+		}
+}
+
+
+//End point-1 listusers (GET)
+
+app.get('/listusers', function (req,res){
+	fs.readFile(__dirname +"/"+"users.json", 'utf8', function (err, data){
+	console.log(data);
+	res.end(data);
+});
+})
+
+//End point-2 add user (POST)
+
+var user = {
+	"user4":{
+	"name":"jaysurya",
+	"city":"houston",
+	"id":1203,
+	"age":24
+	}
+}
+
+app.post('/addUser', function (req,res){
+fs.readFile(__dirname+"/"+"users.json", 'utf8', function (err,data){
+data = JSON.parse(data);
+data["user4"] = user["user4"];
+console.log(data);
+res.end(JSON.stringify(data));
+});
+})
+
+//End point-3 getting specific data (GET)
+
+app.get('/:id', function (req,res){
+fs.readFile(__dirname+"/"+"users.json", 'utf8', function (err,data){
+var users = JSON.parse(data);
+var user = users["user"+req.params.id]
+console.log(user);
+res.end(JSON.stringify(user));
+});
+})
+
+//End point-4  delete user (DELETE)
+
+app.delete('/deleteuser', function (req,res){
+fs.readFile(__dirname+"/"+"users.json", 'utf8', function (err,data){
+data = JSON.parse(data);
+delete data ["user"+1];
+console.log(data);
+res.end(JSON.stringify(data));
+});
+})
+
+//starting the server
+var server = app.listen(8081, function(){
+	var host = server.address().address
+	var port = server.address().port
+	console.log("Example app listening at http://%s:%s", host,port)
+})
